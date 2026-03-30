@@ -18,8 +18,10 @@ spring:
     redis:
       host: ${REDIS_HOST}
       port: ${REDIS_PORT}
+      password: ${REDIS_PASSWORD}
+      ssl: true
 server:
-  port: ${SERVER_PORT}
+  port: ${PORT:8080}
 
 fastapi:
   api-key: ${FAST_API_KEY}
