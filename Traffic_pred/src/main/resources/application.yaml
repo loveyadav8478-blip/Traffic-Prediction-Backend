@@ -1,30 +1,108 @@
+#spring:
+#  application:
+#    name: traffic_pred
+#
+#  datasource:
+#    url: ${DB_URL}
+#    username: ${DB_USERNAME}
+#    password: ${DB_PASSWORD}
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#
+#    hikari:
+#      maximum-pool-size: 5
+#      minimum-idle: 2
+#      idle-timeout: 10000
+#      max-lifetime: 30000        # 🔥 VERY IMPORTANT for Railway
+#      connection-timeout: 30000
+#      validation-timeout: 5000
+#      keepalive-time: 15000      # 🔥 keeps connection alive
+#      auto-commit: true
+#      pool-name: HikariPool
+#
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#    show-sql: true
+#    database-platform: org.hibernate.dialect.MySQLDialect
+#
+#  data:
+#    redis:
+#      host: ${REDIS_HOST:localhost}
+#      port: ${REDIS_PORT:6379}
+#      password: ${REDIS_PASSWORD:}
+#      ssl:
+#        enabled: true
+#
+#server:
+#  port: ${PORT:8080}
+#
+#fastapi:
+#  username: ${FASTAPI_USERNAME}
+#  api-key: ${FAST_API_KEY}
+#  predict-url: ${PREDICT_URL}
+#  login-url: ${FASTAPI_LOGIN_URL}
+#  password: ${FASTAPI_PASSWORD}=${FASTAPI_PASSWORD}
+
 spring:
   application:
     name: traffic_pred
 
   datasource:
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: ${DB_URL:jdbc:mysql://host.docker.internal:3306/trafficdb}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:root123}
     driver-class-name: com.mysql.cj.jdbc.Driver
+
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 2
+      idle-timeout: 10000
+      max-lifetime: 30000
+      connection-timeout: 30000
+      validation-timeout: 5000
+      keepalive-time: 15000
+      auto-commit: true
+      pool-name: HikariPool
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: true
     database-platform: org.hibernate.dialect.MySQLDialect
 
-  data:
-    redis:
-      host: ${REDIS_HOST}
-      port: ${REDIS_PORT}
-      password: ${REDIS_PASSWORD}
-      ssl:
-        enabled: true
+#  data:
+#    redis:
+#      host: ${REDIS_HOST:localhost}
+#      port: ${REDIS_PORT:6379}
+#      password: ${REDIS_PASSWORD:fc2eb2194d8b071030e775137213ed674b0997b6376b83f18d5459ce89f9d793}
+#      ssl:
+#        enabled: false
+
+  # Gmail SMTP — use an App Password, not your login password
+  # Get one at: myaccount.google.com/apppasswords
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME:loveyadavrajakataal@gmail.com}
+    password: ${MAIL_PASSWORD:mjtpnbdbccwsfmux}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+
 server:
   port: ${PORT:8080}
 
 fastapi:
-  api-key: ${FAST_API_KEY}
-  predict-url: ${PREDICT_URL}
-  login-url: ${LOGIN_URL}
+  username: ${FASTAPI_USERNAME:admin}
+  api-key: ${FAST_API_KEY:http://127.0.0.1:8000}
+  predict-url: ${PREDICT_URL:http://127.0.0.1:8000/predict-route}
+  login-url: ${FASTAPI_LOGIN_URL:http://127.0.0.1:8000/login}
+  password: ${FASTAPI_PASSWORD:loveyadav@1}
+
+# OTP expiry — 5 minutes
+otp:
+  ttl-seconds: 300
