@@ -32,10 +32,6 @@ public class TrafficController {
         return new ApiResponse<>("Prediction Successful",result,true);
     }
 
-//    @GetMapping("/history")
-//    public List<TrafficRecord> getHistory(){
-//        return trafficRepository.findAll();
-//    }
     @GetMapping("/history")
     public List<TrafficRecord> getHistory(Authentication auth) {
         String email = auth.getName();

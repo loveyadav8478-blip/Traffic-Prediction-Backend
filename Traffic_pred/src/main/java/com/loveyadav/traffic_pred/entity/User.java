@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
+@Table(name = "users")
 @Data
 public class User {
 
@@ -25,9 +26,4 @@ public class User {
     private String googleId;   // Google's "sub" field — unique per user
     private String picture;    // Google profile picture URL
 
-    // ✅ ADD: Phone number (optional, verified via Twilio OTP)
-//    @Column(unique = true)
-//    private String phone;      // stored as E.164 e.g. +919876543210
-
-//    private boolean phoneVerified = false;
 }

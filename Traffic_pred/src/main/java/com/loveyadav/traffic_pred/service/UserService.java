@@ -42,7 +42,7 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
         System.out.println("Register raw: " + dto.getPassword());
         user.setName(dto.getName());
-        user.setRole(Role.ROLE_ADMIN);
+        user.setRole(Role.ROLE_USER);
         return userRepo.save(user);
     }
 
