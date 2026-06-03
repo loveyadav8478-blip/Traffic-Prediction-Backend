@@ -1,6 +1,8 @@
 package com.loveyadav.traffic_pred;
 
 import com.loveyadav.traffic_pred.dto.ApiResponse;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,5 +31,12 @@ public class TrafficPredApplication {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public CacheManager cacheManager() {
+        CaffeineCacheManager manager = new CaffeineCacheManager();
+        manager.setAllowNullValues(false);
+        return manager;
     }
 }
