@@ -3,7 +3,7 @@ spring:
     name: traffic_pred
 
   datasource:
-    url: ${DB_URL}
+    url: ${DB_URL}?prepareThreshold=0&reWriteBatchedInserts=true
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
@@ -11,18 +11,28 @@ spring:
     hikari:
       maximum-pool-size: 5
       minimum-idle: 2
-      idle-timeout: 10000
-      max-lifetime: 30000
+      idle-timeout: 30000
+      max-lifetime: 600000
       connection-timeout: 30000
       validation-timeout: 5000
-      keepalive-time: 15000
-      auto-commit: true
-      pool-name: HikariPool
+      keepalive-time: 60000
+      connection-test-query: SELECT 1
+      auto-commit: false
+      pool-name: HikariPool-Routex
 
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          lob:
+            non_contextual_creation: true
+        order_inserts: true
+        order_updates: true
+        batch_versioned_data: true
 
   data:
     redis:
@@ -41,5 +51,3 @@ fastapi:
   predict-url: ${PREDICT_URL}
   login-url: ${FASTAPI_LOGIN_URL}
   password: ${FASTAPI_PASSWORD}
-
-kind: Application

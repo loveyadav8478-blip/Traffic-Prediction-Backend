@@ -1,39 +1,3 @@
-//package com.loveyadav.traffic_pred.traffic_pred.entity;
-//
-//import com.fasterxml.jackson.annotation.JsonProperty;
-//import jakarta.persistence.*;
-//import lombok.Data;
-//
-//import java.time.LocalDateTime;
-//
-//@Data
-//@Entity
-//public class TrafficRecord {
-//
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long Id;
-//
-//    @ManyToOne
-//    @JoinColumn(name="user_id")
-//    private User user;
-//
-//    private String source;
-//    private String destination;
-//
-//    private int predictedTraffic;
-//    private double confidence;
-//
-//    @JsonProperty("distance_km")
-//    private double distanceKm;
-//    private double durationMin;
-//
-//    private LocalDateTime timestamp;
-//
-//}
-
-
-
 package com.loveyadav.traffic_pred.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -45,6 +9,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
+@Table(name = "traffic_record")
 public class TrafficRecord {
 
     @Id
@@ -67,6 +32,6 @@ public class TrafficRecord {
 
     @JsonProperty("duration_min")
     private double durationMin;
-
+    @Column(name = "created_at")
     private LocalDateTime timestamp;
 }

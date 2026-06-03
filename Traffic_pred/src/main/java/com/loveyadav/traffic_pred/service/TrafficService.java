@@ -179,7 +179,7 @@ public class TrafficService {
                 } catch (Exception ignored) {}
             }
             body.put("hour", hour);
-
+            log.info("TIME DEBUG: raw='{}' parsed hour={}", req.getTime(), hour);
             // Day of week — Monday=0 … Sunday=6
             int dow = LocalDateTime.now().getDayOfWeek().getValue() - 1;
             if (req.getDayOfWeek() != null && !req.getDayOfWeek().isBlank()) {
@@ -252,7 +252,14 @@ public class TrafficService {
             User user = userRepository.findByEmail(authentication.getName())
                     .orElseThrow(() -> new RuntimeException("User not found"));
             record.setUser(user);
-            trafficRepository.save(record);
+            try {
+                TrafficRecord saved = trafficRepository.saveAndFlush(record);
+                log.info("SAVED RECORD ID = {}", saved.getId());
+            } catch (Exception ex) {
+                log.error("DATABASE SAVE FAILED", ex);
+                throw ex;
+            }
+//            trafficRepository.save(record);
 
             // ── Inject traffic_label into response so frontend gets string ──
             bestRoute.put("traffic_label", trafficLabel);
