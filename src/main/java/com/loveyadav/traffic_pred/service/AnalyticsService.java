@@ -1,7 +1,11 @@
 package com.loveyadav.traffic_pred.service;
 
+import com.loveyadav.traffic_pred.entity.User;
 import com.loveyadav.traffic_pred.repository.TrafficRepository;
+import com.loveyadav.traffic_pred.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import java.util.*;
 
@@ -10,10 +14,21 @@ public class AnalyticsService {
 
     @Autowired
     private TrafficRepository trafficRepository;
+    @Autowired
+    private UserRepository userRepository;
+
+    private User getCurrentUser() {
+        Authentication auth =
+                SecurityContextHolder.getContext().getAuthentication();
+
+        return userRepository.findByEmail(auth.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
 
     //Popular Routes
     public List<Map<String,Object>> getPopularRoutes(){
-        List<Object[]> popularRoutes = trafficRepository.getPopularRoutes();
+        User user = getCurrentUser();
+        List<Object[]> popularRoutes = trafficRepository.getPopularRoutesByUser(user);
         List<Map<String,Object>> result = new ArrayList<>();
         for(Object[] row : popularRoutes){
             Map<String,Object> mp = new HashMap<>();
@@ -27,7 +42,8 @@ public class AnalyticsService {
 
 //    Traffic Distribution
     public List<Map<String,Object>> getTrafficStats(){
-        List<Object[]> trafficDistribution = trafficRepository.getTrafficDistribution();
+        User user = getCurrentUser();
+        List<Object[]> trafficDistribution = trafficRepository.getTrafficDistributionByUser(user);
         List<Map<String,Object>> result = new ArrayList<>();
         for(Object[] row : trafficDistribution){
             Map<String,Object> map = new HashMap<>();
@@ -45,7 +61,8 @@ public class AnalyticsService {
 
 //    Peak Hours
     public List<Map<String,Object>> getPeakHours(){
-        List<Object[]> peakHours = trafficRepository.getPeakHours();
+        User user = getCurrentUser();
+        List<Object[]> peakHours = trafficRepository.getPeakHoursByUser(user);
         List<Map<String,Object>> result = new ArrayList<>();
         for(Object[] row : peakHours){
             Map<String,Object> mp = new HashMap<>();

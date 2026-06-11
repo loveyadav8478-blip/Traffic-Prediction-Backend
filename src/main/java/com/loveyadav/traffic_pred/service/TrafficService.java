@@ -28,6 +28,7 @@ public class TrafficService {
     @Autowired private RestTemplate restTemplate;
     @Autowired private TrafficRepository trafficRepository;
     @Autowired private FastApiAuthService fastApiAuthService;
+    @Autowired private NotificationService notificationService;
 
     @Value("${fastapi.predict-url}")
     private String PREDICT_URL;
@@ -50,11 +51,6 @@ public class TrafficService {
             body.put("source",      req.getSource());
             body.put("destination", req.getDestination());
 
-//            // Hour — parse from "HH:mm" or fall back to current hour
-//            int hour = LocalDateTime.now().getHour();
-//            if (req.getTime() != null && req.getTime().contains(":")) {
-//                try { hour = Integer.parseInt(req.getTime().split(":")[0]); } catch (Exception ignored) {}
-//            }
             // FIXED — handles both "19:00" and "07:00 PM"
             int hour = LocalDateTime.now().getHour();
             if (req.getTime() != null && req.getTime().contains(":")) {
@@ -125,6 +121,22 @@ public class TrafficService {
             String trafficLabel = bestRoute.containsKey("traffic_label")
                     ? (String) bestRoute.get("traffic_label")
                     : labelFromInt(finalPrediction);
+            log.info("Prediction={}, TrafficLabel={}",
+                    finalPrediction,
+                    trafficLabel);
+            String routeName =
+                    req.getSource() + " → " + req.getDestination();
+
+            int increasePercent = switch (trafficLabel.toLowerCase()) {
+                case "high" -> 35;
+                case "medium" -> 20;
+                default -> 10;
+            };
+
+            notificationService.evaluateTrafficPrediction(
+                    routeName,
+                    increasePercent
+            );
 
             // ── Save to DB ────────────────────────────────────────────
             TrafficRecord record = new TrafficRecord();

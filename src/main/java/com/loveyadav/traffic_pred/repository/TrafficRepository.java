@@ -8,18 +8,30 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface TrafficRepository extends JpaRepository<TrafficRecord,Long> {
-    //Most searched routes
-    @Query("SELECT t.source, t.destination, COUNT(t) as cnt " +
-            "FROM TrafficRecord t GROUP BY t.source, t.destination ORDER BY cnt DESC")
-    List<Object[]> getPopularRoutes();
+    @Query("""
+    SELECT t.predictedTraffic, COUNT(t)
+    FROM TrafficRecord t
+    WHERE t.user = :user
+    GROUP BY t.predictedTraffic
+    """)
+    List<Object[]> getTrafficDistributionByUser(User user);
 
-    //Traffic distribution
-    @Query("SELECT t.predictedTraffic, COUNT(t) FROM TrafficRecord t GROUP BY t.predictedTraffic")
-    List<Object[]> getTrafficDistribution();
+    @Query("""
+    SELECT HOUR(t.timestamp), COUNT(t)
+    FROM TrafficRecord t
+    WHERE t.user = :user
+    GROUP BY HOUR(t.timestamp)
+    """)
+    List<Object[]> getPeakHoursByUser(User user);
 
-    //Peak hours
-    @Query("SELECT HOUR(t.timestamp), COUNT(t) FROM TrafficRecord t GROUP BY HOUR(t.timestamp)")
-    List<Object[]> getPeakHours();
+    @Query("""
+    SELECT t.source, t.destination, COUNT(t)
+    FROM TrafficRecord t
+    WHERE t.user = :user
+    GROUP BY t.source, t.destination
+    ORDER BY COUNT(t) DESC
+    """)
+    List<Object[]> getPopularRoutesByUser(User user);
 
 
     List<TrafficRecord> findByUser(User user);

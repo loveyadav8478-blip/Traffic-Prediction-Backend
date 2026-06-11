@@ -23,10 +23,10 @@ public class TrafficPredApplication {
 		SpringApplication.run(TrafficPredApplication.class, args);
     }
 
-    @Bean
-    public RestTemplate restTemplate(){
-        return new RestTemplate();
-    }
+//    @Bean
+//    public RestTemplate restTemplate(){
+//        return new RestTemplate();
+//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

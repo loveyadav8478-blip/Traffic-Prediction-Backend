@@ -42,8 +42,15 @@ spring:
       ssl:
         enabled: false
 
+#  jackson:
+#    serialization:
+#      write-dates-as-timestamps: false
+
+scheduling:
+  enabled: true
+
 server:
-  port: ${PORT}
+  port: ${PORT:8080}
 
 fastapi:
   username: ${FASTAPI_USERNAME}
@@ -51,3 +58,27 @@ fastapi:
   predict-url: ${PREDICT_URL}
   login-url: ${FASTAPI_LOGIN_URL}
   password: ${FASTAPI_PASSWORD}
+
+mistral:
+  api:
+    key: ${GEMINI_API_KEY}
+  model: mistral-small-latest
+  max-tokens: 512
+  temperature: 0.3
+
+routex:
+  weather:
+    lat: 28.6139
+    lon: 77.2090
+
+  alerts:
+    congestion-threshold: 20
+    weather-impact-threshold: 10
+    ecosystem-score-threshold: 60.0
+
+
+app:
+  jwt:
+    secret: "mysecretkeymysecretkeymysecretkey12345"
+    access-token-expiry-ms:  900000
+    refresh-token-expiry-ms: 604800000
