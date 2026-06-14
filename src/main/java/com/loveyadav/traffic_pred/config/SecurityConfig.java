@@ -31,15 +31,11 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-
-        // ── BUG 1 FIXED ───────────────────────────────────────────────────────
-        // Before: one giant string with commas inside List.of() — Spring treated
-        // the entire string as ONE origin, so every real origin was rejected.
-        // After: each origin is a separate string argument.
         config.setAllowedOrigins(List.of(
                 "http://localhost:5173",
                 "https://traffic-prediction-fastapi.onrender.com",
-                "http://52.66.6.123"           // fixed: removed the duplicate "http://"
+                "http://52.66.6.123",
+                "http://43.205.209.209/"
         ));
 
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));

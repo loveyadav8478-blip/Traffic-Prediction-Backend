@@ -3,7 +3,7 @@ spring:
     name: traffic_pred
 
   datasource:
-    url: ${DB_URL}?prepareThreshold=0&reWriteBatchedInserts=true
+    url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
